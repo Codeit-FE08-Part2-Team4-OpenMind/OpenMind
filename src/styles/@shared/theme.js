@@ -20,7 +20,7 @@ const fontWeight = {
 const light = {
   background: 'var(--gray20)',
   fontPrimary: 'var(--gray60)',
-  fontSecondary: 'var(gray10)',
+  fontSecondary: 'var(--gray10)',
   hoverBlue: 'var(--blue)',
   buttonPrimary: 'var(--brown40)',
   buttonSecondary: 'var(--brown10)',
@@ -35,7 +35,7 @@ const light = {
 const dark = {
   background: 'var(--gray20)',
   fontPrimary: 'var(--gray60)',
-  fontSecondary: 'var(gray10)',
+  fontSecondary: 'var(--gray10)',
   hoverBlue: 'var(--blue)',
   buttonPrimary: 'var(--brown40)',
   buttonSecondary: 'var(--brown10)',

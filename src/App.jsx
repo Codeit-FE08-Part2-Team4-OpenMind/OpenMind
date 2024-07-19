@@ -4,6 +4,7 @@ import PageRouter from './PageRouter';
 import { ThemeProvider } from 'styled-components';
 import theme from './styles/@shared/theme';
 import '../src/styles/@shared/init.css';
+import '../src/components/@shared/Button';
 
 function App() {
   const queryClient = new QueryClient();

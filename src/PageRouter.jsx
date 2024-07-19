@@ -1,9 +1,10 @@
+import React from 'react';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
-import Home from './pages/Home';
 import SubjectSelection from './pages/SubjectSelection';
-import QuestionFeed from './pages/QuestionFeed';
 import AnswerFeed from './pages/AnswerFeed';
+import Home from './pages/Home';
 import QuerySample from './pages/QuerySample';
+import QuestionFeed from './pages/QuestionFeed';
 
 function PageRouter() {
   return (

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import Button from '../../@shared/Button';
 
 /**
  * 답변 생성, 수정 시 사용할 입력 폼
@@ -10,7 +11,9 @@ import styled from 'styled-components';
  */
 function AnswerForm({ currentAnswer, onSubmitForm, buttonText }) {
   const [inputText, setInputText] = useState(currentAnswer);
-  const [disabled, setDisabled] = useState(false);
+  // 기본적으로 disabled는 true 상태기 때문에 수정 시 별도의 추가 입력이 없다면
+  // 이전에 작성한 내용이 있다 하더라도 여전히 disabled가 유지된다.
+  const [disabled, setDisabled] = useState(true);
 
   const handleInputChange = event => {
     const { value } = event.target;
@@ -22,18 +25,15 @@ function AnswerForm({ currentAnswer, onSubmitForm, buttonText }) {
   return (
     <StyledAnswerForm onSubmit={e => onSubmitForm(e, inputText)}>
       <textarea placeholder={'답변을 입력해주세요'} value={inputText} onChange={handleInputChange} />
-      {/* TODO: 리나님 공통 버튼 컴포넌트 만들어지면 갈아끼우기 */}
-      <button
+      <Button
+        type={'submit'}
+        width={'100%'}
+        height={'46px'}
+        btnColor={'var(--brown40)'}
         disabled={disabled}
-        style={{
-          height: '46px',
-          width: '100%',
-          backgroundColor: 'var(--brown40)',
-          color: 'white',
-          borderRadius: '8px',
-        }}>
+        shape={'square'}>
         {buttonText}
-      </button>
+      </Button>
     </StyledAnswerForm>
   );
 }
@@ -56,6 +56,12 @@ const StyledAnswerForm = styled.form`
 
     &::placeholder {
       color: var(--gray40);
+    }
+
+    &:focus {
+      outline: 1px solid var(--brown40);
+      background-color: var(--brown10);
+      color: var(--gray60);
     }
   }
 `;

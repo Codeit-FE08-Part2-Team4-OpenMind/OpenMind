@@ -44,12 +44,30 @@ function AnswerCard({
   const { mutate: updateAnswerMutate } = useUpdateAnswerMutation();
 
   const handleEditButtonClick = () => {
-    setIsEditing(true);
+    if (isRejected) {
+      alert('이미 거절한 답변입니다.');
+    } else if (!currentAnswer) {
+      alert('아직 생성된 답변이 없습니다.');
+    } else {
+      setIsEditing(true);
+    }
+  };
+
+  const handleRejectButtonClick = () => {
+    if (isRejected) {
+      alert('이미 거절한 답변입니다.');
+    } else {
+      // isRejected가 false 인 경우에만 실행하면 됨
+      const isOkay = confirm('답변 거절 후에는 철회 할 수 없습니다.\n답변을 거절하시겠습니까?');
+      if (isOkay) {
+        setIsRejected(true);
+        updateAnswerMutate({ answerId: answer.id, isRejected: true });
+      }
+    }
   };
 
   const handleCreateFormSubmit = (event, inputText) => {
     event.preventDefault();
-
     setCurrentAnswer(inputText);
     createAnswerMutate(
       { questionId: questionId, content: inputText },
@@ -65,15 +83,6 @@ function AnswerCard({
     setCurrentAnswer(inputText);
     setIsEditing(false);
     updateAnswerMutate({ answerId: answer.id, content: inputText });
-  };
-
-  const handleRejectButtonClick = event => {
-    event.preventDefault();
-    if (!isRejected) {
-      // isRejected가 false 인 경우에만 실행하면 됨
-      setIsRejected(true);
-      updateAnswerMutate({ answerId: answer.id, isRejected: true });
-    }
   };
 
   const renderAnswerContent = () => {
