@@ -1,0 +1,180 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> components/feed/answerFeed/AnswerForm.jsx</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Global</h3><ul><li><a href="global.html#AnswerCard">AnswerCard</a></li><li><a href="global.html#AnswerForm">AnswerForm</a></li><li><a href="global.html#AnswerStatus">AnswerStatus</a></li><li><a href="global.html#AnswerTemplate">AnswerTemplate</a></li><li><a href="global.html#DropdownBox">DropdownBox</a></li><li><a href="global.html#MoreButton">MoreButton</a></li><li><a href="global.html#PageNavigator">PageNavigator</a></li><li><a href="global.html#QuestionCard">QuestionCard</a></li><li><a href="global.html#QuestionTitle">QuestionTitle</a></li><li><a href="global.html#Reaction">Reaction</a></li><li><a href="global.html#StyledButton">StyledButton</a></li><li><a href="global.html#ThemeToggler">ThemeToggler</a></li><li><a href="global.html#createCenteredArray">createCenteredArray</a></li><li><a href="global.html#getElapsedPeriod">getElapsedPeriod</a></li><li><a href="global.html#getSubjects">getSubjects</a></li><li><a href="global.html#getTheme">getTheme</a></li><li><a href="global.html#getThemeColor">getThemeColor</a></li><li><a href="global.html#postAnswer">postAnswer</a></li><li><a href="global.html#postReaction">postReaction</a></li><li><a href="global.html#putAnswer">putAnswer</a></li><li><a href="global.html#useSubjectsQuery">useSubjectsQuery</a></li><li><a href="global.html#useThemeSetting">useThemeSetting</a></li><li><a href="global.html#useThemeToggle">useThemeToggle</a></li><li><a href="global.html#useToggle">useToggle</a></li><li><a href="global.html#useWindowSize">useWindowSize</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>components/feed/answerFeed/AnswerForm.jsx</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { useState } from 'react';
+import styled from 'styled-components';
+import Button from '../../@shared/Button';
+import { getThemeColor } from '../../../utils/getThemeColor';
+
+/**
+ * 답변 생성, 수정 시 사용할 입력 폼
+ * @param props
+ * @param {string} props.currentAnswer 보여줄 답변 작성 내용
+ * @param {Function} props.onSubmitForm 폼 제출 이벤트 핸들러
+ * @param {string} props.buttonText 버튼에 들어갈 텍스트
+ */
+function AnswerForm({ currentAnswer, onSubmitForm, buttonText }) {
+  const [inputText, setInputText] = useState(currentAnswer);
+  // 기본적으로 disabled는 true 상태기 때문에 수정 시 별도의 추가 입력이 없다면
+  // 이전에 작성한 내용이 있다 하더라도 여전히 disabled가 유지된다.
+  const [disabled, setDisabled] = useState(true);
+
+  const handleInputChange = event => {
+    const { value } = event.target;
+
+    setDisabled(value.length === 0);
+    setInputText(value);
+  };
+
+  return (
+    &lt;StyledAnswerForm onSubmit={e => onSubmitForm(e, inputText)}>
+      &lt;textarea placeholder={'답변을 입력해주세요'} value={inputText} onChange={handleInputChange} />
+      &lt;Button type={'submit'} width={'100%'} height={'46px'} btnColor={'deep'} disabled={disabled} shape={'square'}>
+        {buttonText}
+      &lt;/Button>
+    &lt;/StyledAnswerForm>
+  );
+}
+export default AnswerForm;
+
+const StyledAnswerForm = styled.form`
+  &amp; textarea {
+    width: 100%;
+    height: 186px;
+    max-height: 186px;
+    border-radius: 8px;
+
+    padding: 16px;
+    background-color: ${getThemeColor('gray20')};
+
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+
+    margin-bottom: 8px;
+
+    &amp;::placeholder {
+      color: ${getThemeColor('gray40')};
+    }
+
+    &amp;:focus {
+      outline: 1px solid ${getThemeColor('brown40')};
+      background-color: ${getThemeColor('brown10')};
+      color: var(--gray60);
+    }
+  }
+`;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.3</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>

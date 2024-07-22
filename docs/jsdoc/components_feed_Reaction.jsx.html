@@ -1,0 +1,284 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> components/feed/Reaction.jsx</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Global</h3><ul><li><a href="global.html#AnswerCard">AnswerCard</a></li><li><a href="global.html#AnswerForm">AnswerForm</a></li><li><a href="global.html#AnswerStatus">AnswerStatus</a></li><li><a href="global.html#AnswerTemplate">AnswerTemplate</a></li><li><a href="global.html#DropdownBox">DropdownBox</a></li><li><a href="global.html#MoreButton">MoreButton</a></li><li><a href="global.html#PageNavigator">PageNavigator</a></li><li><a href="global.html#QuestionCard">QuestionCard</a></li><li><a href="global.html#QuestionTitle">QuestionTitle</a></li><li><a href="global.html#Reaction">Reaction</a></li><li><a href="global.html#StyledButton">StyledButton</a></li><li><a href="global.html#ThemeToggler">ThemeToggler</a></li><li><a href="global.html#createCenteredArray">createCenteredArray</a></li><li><a href="global.html#getElapsedPeriod">getElapsedPeriod</a></li><li><a href="global.html#getSubjects">getSubjects</a></li><li><a href="global.html#getTheme">getTheme</a></li><li><a href="global.html#getThemeColor">getThemeColor</a></li><li><a href="global.html#postAnswer">postAnswer</a></li><li><a href="global.html#postReaction">postReaction</a></li><li><a href="global.html#putAnswer">putAnswer</a></li><li><a href="global.html#useSubjectsQuery">useSubjectsQuery</a></li><li><a href="global.html#useThemeSetting">useThemeSetting</a></li><li><a href="global.html#useThemeToggle">useThemeToggle</a></li><li><a href="global.html#useToggle">useToggle</a></li><li><a href="global.html#useWindowSize">useWindowSize</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>components/feed/Reaction.jsx</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { styled } from 'styled-components';
+import likeIcon from '../../assets/images/like-icon.png';
+import dislikeIcon from '../../assets/images/dislike-icon.png';
+import { jelloHorizontalAnimation, shakeLeftAnimation } from '../../styles/feed/feedCardStyles';
+import { useState, useEffect } from 'react';
+import useSelectReactionMutation from '../../queries/useReactionMutation';
+import ConfettiExplosion from 'react-confetti-explosion';
+import { EXPLODE_PROPS, LIMIT_DISLIKE_COUNT } from '../../constants/feedCard';
+import { getThemeColor } from '../../utils/getThemeColor';
+
+/**
+ * 좋아요 싫어요를 보여주고 선택할 수 있다
+ * @param props
+ * @param {integer} props.likeCount 좋아요 수
+ * @param {string} props.questionId 질문 id
+ */
+function Reaction({ likeCount, questionId = '123424' }) {
+  // TODO: '123424'는 테스트값이므로 향후 삭제 예정
+  const reactionList = JSON.parse(localStorage.getItem('reactionList'));
+
+  const [reactedType, setReactedType] = useState('');
+  const [currentLikeCount, setCurrentLikeCount] = useState(likeCount);
+  const [isExplode, setIsExplode] = useState(false);
+
+  const { mutate: reactionMutate } = useSelectReactionMutation();
+  const { mutate: updateAnswerMutate } = useSelectReactionMutation();
+
+  const handleReactionButtonClick = event => {
+    const { type } = event.currentTarget.dataset;
+
+    if (type === 'like') {
+      setIsExplode(true);
+    }
+
+    if (!reactedType) {
+      // 이력이 존재하지 않을 경우에만 실행되는 로직
+      reactionList.push({ questionId: questionId, type: type });
+      localStorage.setItem('reactionList', JSON.stringify(reactionList));
+
+      // 클릭한 리액션이 좋아요일 경우에만 좋아요 개수 증가
+      type === 'like' &amp;&amp; setCurrentLikeCount(prevState => prevState + 1);
+
+      reactionMutate(
+        { questionId: questionId, type: type },
+        {
+          onSuccess: data => {
+            const answer = data.answer;
+            // 리액션 제출에 성공한다면,
+            // 답변 객체가 존재하고, 답변 거절이 되지 않았고, 응답 받은 싫어요 수가 기준치보다 많다면
+            // 답변 거절 상태로 변경 요청을 서버로 보냅니다.
+            if (answer &amp;&amp; !answer.isRejected &amp;&amp; data.dislike >= LIMIT_DISLIKE_COUNT) {
+              updateAnswerMutate({ answerId: answer.id, isRejected: true });
+            }
+          },
+        }
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (!reactionList) {
+      // 최초 접속이라 반응 이력 배열이 없다면 생성한다.
+      localStorage.setItem('reactionList', JSON.stringify([]));
+    } else if (questionId &amp;&amp; reactionList) {
+      // 로컬 스토리지에서 해당 유저가 반응한 {questionId, type} 객체 베열에서 해당 질문에 대한 이력을 찾는다.
+      const reaction = reactionList.find(reaction => reaction.questionId === questionId);
+      if (reaction) {
+        // 이력이 존재한다면 setReactedType에 저장한다.
+        setReactedType(reaction.type);
+      }
+    }
+  }, [reactionList]);
+
+  return (
+    &lt;StyledReactionContainer>
+      &lt;StyledReactionButton
+        className={'like-button'}
+        data-type={'like'}
+        $reactedType={reactedType}
+        $isExplode={isExplode}
+        onClick={handleReactionButtonClick}>
+        &lt;img className={'like-icon'} src={likeIcon} alt={'좋아요 아이콘'} />
+        &lt;span>
+          좋아요{isExplode &amp;&amp; &lt;ConfettiExplosion {...EXPLODE_PROPS} onComplete={() => setIsExplode(false)} />}
+        &lt;/span>
+        &lt;span>{currentLikeCount}&lt;/span>
+      &lt;/StyledReactionButton>
+      &lt;StyledReactionButton
+        className={'dislike-button'}
+        data-type={'dislike'}
+        $reactedType={reactedType}
+        onClick={handleReactionButtonClick}>
+        &lt;img className={'dislike-icon'} src={dislikeIcon} alt={'싫어요 아이콘'} />
+        &lt;span>싫어요&lt;/span>
+      &lt;/StyledReactionButton>
+    &lt;/StyledReactionContainer>
+  );
+}
+
+export default Reaction;
+
+const StyledReactionContainer = styled.section`
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  border-top: 1px solid ${getThemeColor('gray30')};
+  padding-top: 15px;
+`;
+
+const StyledReactionButton = styled.button`
+  display: flex;
+  gap: 6px;
+  /* background-color: red; */
+  padding: 10px 8px;
+  border-radius: 30px;
+  color: ${getThemeColor('defaultFont')};
+
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+  text-align: left;
+
+  &amp;.like-button {
+    color: ${({ $reactedType, theme }) => $reactedType === 'like' &amp;&amp; theme.blue};
+
+    &amp; .like-icon {
+      ${({ $isExplode }) => $isExplode &amp;&amp; jelloHorizontalAnimation}
+      filter: ${({ $reactedType, theme }) => $reactedType === 'like' &amp;&amp; theme.blueFilter};
+    }
+  }
+
+  &amp;.dislike-button {
+    color: ${({ $reactedType, theme }) => $reactedType === 'dislike' &amp;&amp; theme.red};
+
+    &amp; .dislike-icon {
+      filter: ${({ $reactedType, theme }) => $reactedType === 'dislike' &amp;&amp; theme.redFilter};
+    }
+  }
+
+  &amp;:hover {
+    cursor: pointer;
+
+    &amp;.like-button {
+      color: ${getThemeColor('blue')};
+
+      &amp; .like-icon {
+        // 폭죽이 터지는 중이 아니거나, $reactedType가 falsy값일 경우에만 흔들림 애니메이션 적용
+        // !$isExplode이 없으면 스타일 충돌이 일어날 수 있음, 동적인 변수를 사용하는데 위치에 따른 덮어쓰기는 좋지 않다고 판단
+        ${({ $isExplode, $reactedType }) => !$isExplode &amp;&amp; !$reactedType &amp;&amp; shakeLeftAnimation}
+        filter: ${getThemeColor('blueFilter')};
+      }
+    }
+
+    &amp;.dislike-button {
+      color: ${getThemeColor('red')};
+      &amp; .dislike-icon {
+        filter: ${getThemeColor('redFilter')};
+      }
+    }
+  }
+
+  &amp; .like-icon,
+  .dislike-icon {
+    width: 16px;
+    height: 16px;
+  }
+`;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.3</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>

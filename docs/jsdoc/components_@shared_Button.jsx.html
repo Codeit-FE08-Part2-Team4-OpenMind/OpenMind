@@ -1,0 +1,228 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> components/@shared/Button.jsx</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Global</h3><ul><li><a href="global.html#AnswerCard">AnswerCard</a></li><li><a href="global.html#AnswerForm">AnswerForm</a></li><li><a href="global.html#AnswerStatus">AnswerStatus</a></li><li><a href="global.html#AnswerTemplate">AnswerTemplate</a></li><li><a href="global.html#DropdownBox">DropdownBox</a></li><li><a href="global.html#MoreButton">MoreButton</a></li><li><a href="global.html#PageNavigator">PageNavigator</a></li><li><a href="global.html#QuestionCard">QuestionCard</a></li><li><a href="global.html#QuestionTitle">QuestionTitle</a></li><li><a href="global.html#Reaction">Reaction</a></li><li><a href="global.html#StyledButton">StyledButton</a></li><li><a href="global.html#ThemeToggler">ThemeToggler</a></li><li><a href="global.html#createCenteredArray">createCenteredArray</a></li><li><a href="global.html#getElapsedPeriod">getElapsedPeriod</a></li><li><a href="global.html#getSubjects">getSubjects</a></li><li><a href="global.html#getTheme">getTheme</a></li><li><a href="global.html#getThemeColor">getThemeColor</a></li><li><a href="global.html#postAnswer">postAnswer</a></li><li><a href="global.html#postReaction">postReaction</a></li><li><a href="global.html#putAnswer">putAnswer</a></li><li><a href="global.html#useSubjectsQuery">useSubjectsQuery</a></li><li><a href="global.html#useThemeSetting">useThemeSetting</a></li><li><a href="global.html#useThemeToggle">useThemeToggle</a></li><li><a href="global.html#useToggle">useToggle</a></li><li><a href="global.html#useWindowSize">useWindowSize</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>components/@shared/Button.jsx</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { softButtonStyle, deepButtonStyle, ArrowImg } from './ButtonStyles';
+import { useNavigate } from 'react-router-dom';
+import styled, { css } from 'styled-components';
+
+/**
+ * 버튼 컴포넌트입니다.
+ * @param {object} props - 컴포넌트 속성
+ * @param {string} [props.imgSrc] - 버튼 내부 이미지 경로
+ * 사용 시 imgSrc = SoftArrow / DeepArrow 적어서 사용하시고 / 사용X 경우 안 적어주면 돼요
+ * @param {function} [props.onClick] - 클릭 이벤트 핸들러
+ * @param {string} [props.pagePath] - 클릭 시 이동할 페이지 경로
+ * @param {boolean} [props.disabled='false'] - 버튼 비활성화 여부
+ * false : 활성화 / true : 비활성화
+ * @param {'square' | 'pill'} [props.shape='square'] - 버튼 모양
+ * @param {'soft' | 'deep'} [props.btnColor='soft'] - 버튼 색상 테마
+ * @param {object} [props.style={}] - 추가적인 스타일 객체
+ * 반응형 디자인 시 font-size나 다른 값 변경 시 이 부분에 추가해주시면 변경돼요
+ * @param {string} [props.width='161px'] - 버튼 너비
+ * @param {string} [props.height='46px'] - 버튼 높이
+ * @param {string} [props.type='button'] - 버튼의 타입
+ * @returns {JSX.Element} 스타일된 버튼 JSX 엘리먼트
+  
+ */
+
+const StyledButton = styled(({ btnColor, ...rest }) => &lt;button {...rest} />)`
+  background-color: ${({ btnColor }) =>
+    btnColor === 'soft' ? softButtonStyle.background : deepButtonStyle.background};
+  color: ${({ btnColor }) => (btnColor === 'soft' ? softButtonStyle.text : deepButtonStyle.text)};
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 400;
+  gap: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  width: ${({ width }) => width || '161px'};
+  height: ${({ height }) => height || '46px'};
+
+  border-radius: ${({ shape }) => (shape === 'square' ? '8px' : '200px')};
+
+  ${({ disabled }) =>
+    disabled &amp;&amp;
+    css`
+      opacity: 0.5;
+      cursor: not-allowed;
+    `};
+
+  &amp;:hover {
+    border: 1.5px solid;
+    border-color: ${({ btnColor }) => (btnColor === 'soft' ? softButtonStyle.border : deepButtonStyle.border)};
+    opacity: ${disabled => (disabled ? '0.5' : '1.0')};
+  }
+
+  &amp;:active {
+    border: 1px solid;
+    border-color: ${({ btnColor }) => (btnColor === 'soft' ? softButtonStyle.border : deepButtonStyle.border)};
+    background-color: ${({ btnColor }) => (btnColor === 'soft' ? softButtonStyle.pressed : deepButtonStyle.pressed)};
+  }
+
+  ${({ style }) =>
+    style &amp;&amp;
+    css`
+      ${style}
+    `}
+`;
+
+function Button({
+  children,
+  imgSrc,
+  onClick,
+  pagePath,
+  disabled,
+  shape = 'square',
+  btnColor,
+  width,
+  height,
+  type = 'button',
+  style = {},
+}) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (!disabled &amp;&amp; pagePath) {
+      if (onClick) {
+        onClick();
+      }
+      navigate(pagePath);
+    }
+  };
+
+  const btnColorDefault = btnColor || 'soft';
+
+  return (
+    &lt;StyledButton
+      width={width}
+      height={height}
+      btnColor={btnColorDefault}
+      onClick={handleClick}
+      disabled={disabled}
+      shape={shape}
+      type={type}
+      style={style}>
+      {children}
+      {imgSrc &amp;&amp; &lt;ArrowImg src={imgSrc} alt="화살표" />}
+    &lt;/StyledButton>
+  );
+}
+
+export default Button;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.3</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>

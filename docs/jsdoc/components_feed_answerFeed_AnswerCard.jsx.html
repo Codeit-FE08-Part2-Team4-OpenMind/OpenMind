@@ -1,0 +1,243 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> components/feed/answerFeed/AnswerCard.jsx</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Global</h3><ul><li><a href="global.html#AnswerCard">AnswerCard</a></li><li><a href="global.html#AnswerForm">AnswerForm</a></li><li><a href="global.html#AnswerStatus">AnswerStatus</a></li><li><a href="global.html#AnswerTemplate">AnswerTemplate</a></li><li><a href="global.html#DropdownBox">DropdownBox</a></li><li><a href="global.html#MoreButton">MoreButton</a></li><li><a href="global.html#PageNavigator">PageNavigator</a></li><li><a href="global.html#QuestionCard">QuestionCard</a></li><li><a href="global.html#QuestionTitle">QuestionTitle</a></li><li><a href="global.html#Reaction">Reaction</a></li><li><a href="global.html#StyledButton">StyledButton</a></li><li><a href="global.html#ThemeToggler">ThemeToggler</a></li><li><a href="global.html#createCenteredArray">createCenteredArray</a></li><li><a href="global.html#getElapsedPeriod">getElapsedPeriod</a></li><li><a href="global.html#getSubjects">getSubjects</a></li><li><a href="global.html#getTheme">getTheme</a></li><li><a href="global.html#getThemeColor">getThemeColor</a></li><li><a href="global.html#postAnswer">postAnswer</a></li><li><a href="global.html#postReaction">postReaction</a></li><li><a href="global.html#putAnswer">putAnswer</a></li><li><a href="global.html#useSubjectsQuery">useSubjectsQuery</a></li><li><a href="global.html#useThemeSetting">useThemeSetting</a></li><li><a href="global.html#useThemeToggle">useThemeToggle</a></li><li><a href="global.html#useToggle">useToggle</a></li><li><a href="global.html#useWindowSize">useWindowSize</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>components/feed/answerFeed/AnswerCard.jsx</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import styled from 'styled-components';
+import { StyledAnswerText, StyledFeedCardContainer } from '../../../styles/feed/feedCardStyles';
+import AnswerStatus from '../AnswerStatus';
+import MoreButton from './MoreButton';
+import QuestionTitle from '../QuestionTitle';
+import AnswerTemplate from '../AnswerTemplate';
+import Reaction from '../Reaction';
+import { useState } from 'react';
+import AnswerForm from './AnswerForm';
+import useCreateAnswerMutation from '../../../queries/useCreateAnswerMutation';
+import useUpdateAnswerMutation from '../../../queries/useUpdateAnswerMutation';
+import { LIMIT_DISLIKE_COUNT } from '../../../constants/feedCard';
+
+/**
+ * 답변 피드 페이지에서의 답변 카드
+ * @param props
+ * @param {string} props.questionId 질문 id
+ * @param {string} props.questionContent 질문 내용
+ * @param {integer} props.likeCount 좋아요 수
+ * @param {integer} props.dislikeCount 싫어요 수
+ * @param {string} props.questionCreatedAt 질문 생성 시간
+ * @param {object | null} props.answer 답변 객체
+ */
+function AnswerCard({
+  // TODO: 상위 컴포넌트에서 데이터를 넣어줄 수 있게 되면 테스트용 기본값 삭제 예정
+  questionId,
+  questionContent = '좋아하는 동물은?좋아하는 동물은?좋아하는 동물은? 좋아하동 물은?',
+  likeCount = 0,
+  dislikeCount = 0,
+  questionCreateAt = '',
+  answer,
+}) {
+  const isHasAnswer = !!answer;
+  const [currentAnswer, setCurrentAnswer] = useState(isHasAnswer ? answer.content : '');
+  const [answerCreatedAt, setAnswerCreatedAt] = useState(isHasAnswer ? answer.createdAt : '');
+  const [isEditing, setIsEditing] = useState(false);
+  // LIMIT_DISLIKE_COUNT보다 싫어요가 많거나, 답변 객체가 존재하고 isRejected가 명시적으로 true인 경우 외에는 false
+  // 질문에 싫어요 개수가 많으면, 자동으로 답변을 달 수 없도록 조치
+  const [isRejected, setIsRejected] = useState(
+    dislikeCount >= LIMIT_DISLIKE_COUNT || (isHasAnswer &amp;&amp; answer.isRejected)
+  );
+
+  const { mutate: createAnswerMutate } = useCreateAnswerMutation();
+  const { mutate: updateAnswerMutate } = useUpdateAnswerMutation();
+
+  const handleEditButtonClick = () => {
+    if (isRejected) {
+      alert('이미 거절한 답변입니다.');
+    } else if (!currentAnswer) {
+      alert('아직 생성된 답변이 없습니다.');
+    } else {
+      setIsEditing(true);
+    }
+  };
+
+  const handleRejectButtonClick = () => {
+    if (isRejected) {
+      alert('이미 거절한 답변입니다.');
+    } else {
+      // isRejected가 false 인 경우에만 실행하면 됨
+      const isOkay = confirm('답변 거절 후에는 철회 할 수 없습니다.\n답변을 거절하시겠습니까?');
+      if (isOkay) {
+        setIsRejected(true);
+        updateAnswerMutate({ answerId: answer.id, isRejected: true });
+      }
+    }
+  };
+
+  const handleCreateFormSubmit = (event, inputText) => {
+    event.preventDefault();
+    setCurrentAnswer(inputText);
+    createAnswerMutate(
+      { questionId: questionId, content: inputText },
+      {
+        onSuccess: data => data &amp;&amp; setAnswerCreatedAt(data.createdAt),
+      }
+    );
+  };
+
+  const handleEditFormSubmit = (event, inputText) => {
+    event.preventDefault();
+
+    setCurrentAnswer(inputText);
+    setIsEditing(false);
+    updateAnswerMutate({ answerId: answer.id, content: inputText });
+  };
+
+  const renderAnswerContent = () => {
+    if (isRejected) {
+      // 답변 거절의 경우
+      return &lt;StyledAnswerText $isRejected>답변 거절&lt;/StyledAnswerText>;
+    }
+
+    if (isEditing) {
+      // 답변 거절은 아니지만, 수정 하기 버튼을 누른 경우
+      return &lt;AnswerForm currentAnswer={currentAnswer} buttonText="수정 완료" onSubmitForm={handleEditFormSubmit} />;
+    }
+
+    if (!currentAnswer) {
+      // 답변 거절도 아니고, 수정중도 아니지만, 받아온 답변이 빈값인 경우
+      return &lt;AnswerForm currentAnswer={currentAnswer} buttonText="답변 완료" onSubmitForm={handleCreateFormSubmit} />;
+    }
+
+    // 답변 거절도 아니고, 수정중도 아니고, 받아온 답변이 빈값도 아닌 경우
+    return &lt;StyledAnswerText>{currentAnswer}&lt;/StyledAnswerText>;
+  };
+
+  return (
+    &lt;StyledFeedCardContainer>
+      &lt;StyledAnswerCardUpperArea>
+        &lt;AnswerStatus isComplete={isHasAnswer || isRejected} />
+        &lt;MoreButton onEditButtonClick={handleEditButtonClick} onRejectButtonClick={handleRejectButtonClick} />
+      &lt;/StyledAnswerCardUpperArea>
+      &lt;QuestionTitle question={questionContent} questionCreateAt={questionCreateAt} />
+      &lt;AnswerTemplate answerCreatedAt={answerCreatedAt}>{renderAnswerContent()}&lt;/AnswerTemplate>
+      &lt;Reaction likeCount={likeCount} dislikeCount={dislikeCount} questionId={questionId} />
+    &lt;/StyledFeedCardContainer>
+  );
+}
+
+export default AnswerCard;
+
+const StyledAnswerCardUpperArea = styled.section`
+  display: flex;
+  justify-content: space-between;
+`;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.3</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+
+</body>
+</html>
