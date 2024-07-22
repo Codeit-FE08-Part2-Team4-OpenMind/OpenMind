@@ -16,10 +16,10 @@
     "react": "^18.3.1",
     "react-confetti-explosion": "^2.1.2",
     "react-dom": "^18.3.1",
+    "react-hot-toast": "^2.4.1",
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.25.1",
     "styled-components": "^6.1.12",
-    "styled-react-modal": "^3.1.1",
     "styled-reset": "^4.5.2"
   },
   "devDependencies": {

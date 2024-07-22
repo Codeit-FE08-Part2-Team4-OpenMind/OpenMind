@@ -3,12 +3,14 @@ import profile from '../assets/images/samples/profile-sample.png';
 import { ThemeProvider } from 'styled-components';
 import theme from '../styles/@shared/theme';
 import { useState } from 'react';
+import showToast from '../components/@shared/Toast';
 
 function Home() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const showModal = () => {
     setModalIsOpen(true);
+    showToast;
   };
   const closeModal = () => {
     setModalIsOpen(false);
