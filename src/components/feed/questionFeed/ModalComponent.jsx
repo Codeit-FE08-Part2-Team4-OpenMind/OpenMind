@@ -9,10 +9,10 @@ import { getThemeColor } from '../../../utils/getThemeColor';
 
 Modal.setAppElement('#root');
 
-function ModalComponent({ profileImg, name, isOpen, onRequestClose }) {
+function ModalComponent({ profileImg, name, isOpen, onRequestClose, subjectId }) {
   const [textAreaValue, setTextAreaValue] = useState('');
   const navigate = useNavigate();
-  const { subjectId } = useParams(); // useParams 훅을 사용하여 subjectId를 가져옵니다.
+  //const { id: subjectId } = useParams(); // useParams 훅을 사용하여 subjectId를 가져옵니다.
 
   const handleTextAreaChange = event => {
     setTextAreaValue(event.target.value);
@@ -29,6 +29,7 @@ function ModalComponent({ profileImg, name, isOpen, onRequestClose }) {
       .then(response => {
         console.log('handleAxiosRequest', response);
         onRequestClose();
+        window.location.reload(); //새로고침
         navigate(`/post/${response.data.subjectId}`);
       })
       .catch(error => console.log('request error', error));
