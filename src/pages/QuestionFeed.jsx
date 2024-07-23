@@ -71,7 +71,7 @@ function QuestionFeed() {
   };
 
   const { id, name, imageSource, questionCount } = profileData || {
-    id: subjectId,
+    id: 7478,
     name: '아초는고양이',
     imageSource: profileImg,
     questionCount: 25,
@@ -84,7 +84,7 @@ function QuestionFeed() {
           <StyledHeroImg src={HeroImgUrl} alt="히어로 이미지" />
         </StyledHeroImgWrapper>
         <Header name={name} imageSource={imageSource} />
-        <QuestionCardList subjectId={subjectId} questionCount={questionCount} />
+        <QuestionCardList subjectId={id} questionCount={questionCount} />
         <Button
           onClick={handleOpenModal}
           shape={'pill'}

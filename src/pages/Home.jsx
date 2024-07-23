@@ -27,6 +27,7 @@ function Home() {
   const navigate = useNavigate();
 
   const handleAxiosRequest = () => {
+    console.log('ha');
     const request = { name, team: '8-4' };
     axios
       .post('https://openmind-api.vercel.app/8-4/subjects/', request)

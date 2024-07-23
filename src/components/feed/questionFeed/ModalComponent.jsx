@@ -12,7 +12,6 @@ Modal.setAppElement('#root');
 function ModalComponent({ profileImg, name, isOpen, onRequestClose, subjectId }) {
   const [textAreaValue, setTextAreaValue] = useState('');
   const navigate = useNavigate();
-  //const { id: subjectId } = useParams(); // useParams 훅을 사용하여 subjectId를 가져옵니다.
 
   const handleTextAreaChange = event => {
     setTextAreaValue(event.target.value);
@@ -33,7 +32,6 @@ function ModalComponent({ profileImg, name, isOpen, onRequestClose, subjectId })
         navigate(`/post/${response.data.subjectId}`);
       })
       .catch(error => console.log('request error', error));
-    console.log('handleAxiosRequest : ', request);
   };
 
   return (

@@ -12,6 +12,7 @@ import Spinner from '../../../styles/feed/spinnerStyles';
 
 function QuestionCardList({ questionCount, subjectId }) {
   const { data, observerRef, hasNextPage, isLoading, isError } = useInfiniteQueryWithScroll(subjectId);
+  console.log('data : ', data);
 
   // 데이터가 로딩 중이거나 오류가 발생하면 해당 상태를 처리
   if (isLoading) {
